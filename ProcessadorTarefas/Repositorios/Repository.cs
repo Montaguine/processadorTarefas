@@ -3,12 +3,12 @@ using SOLID_Example.Interfaces;
 
 namespace ProcessadorTarefas.Repositorios
 {
-    internal class Repository : IRepository<Tarefa>
+    public class Repository : IRepository<Tarefa>
     {
-        static IEnumerable<Tarefa> repository = new List<Tarefa>();
+        private IEnumerable<Tarefa> repository = new List<Tarefa>();
         public void Add(Tarefa entity)
         {
-            repository.Append(entity);
+            repository = repository.Append(entity);
         }
         public IEnumerable<Tarefa> GetAll()
         {
@@ -20,11 +20,22 @@ namespace ProcessadorTarefas.Repositorios
         }
         public void Update(Tarefa entity)
         {
-            if (int.TryParse(Console.ReadLine(), out int estado))
+            if(entity.Estado == EstadoTarefa.Criada)
             {
-                entity.Estado = (EstadoTarefa)estado;
+                entity.Estado = EstadoTarefa.Agendada;
             }
         }
-
+        private void FillRepository()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                Tarefa tarefa = new Tarefa();
+                Add(tarefa);
+            }
+        }
+        public Repository()
+        {
+            FillRepository();
+        }
     }
 }
